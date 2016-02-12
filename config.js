@@ -2,7 +2,7 @@
 
 module.exports = {
     customDesign: {
-        version: 19,
+        version: 20,
         views: {
             search: {
                 map: function(doc) {
