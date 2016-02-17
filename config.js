@@ -4,9 +4,16 @@ module.exports = {
     customDesign: {
         version: 20,
         views: {
+            byVisualizerVersion: {
+                map: function (doc) {
+                    if (doc.$type !== 'entry') return;
+                    emit(doc.$content.version);
+                },
+                reduce: '_count'
+            },
             search: {
-                map: function(doc) {
-                    if(doc.$type !== 'entry') return;
+                map: function (doc) {
+                    if (doc.$type !== 'entry') return;
                     function uniq(a) {
                         var temp = {};
                         for (var i = 0; i < a.length; i++)
@@ -18,53 +25,53 @@ module.exports = {
                     }
 
                     var content = doc.$content;
-                    for(var flavor in content.flavors) {
+                    for (var flavor in content.flavors) {
                         var toEmit = {
-                            _id:doc._id,
-                            _rev:doc._rev,
+                            _id: doc._id,
+                            _rev: doc._rev,
                             flavor: flavor,
-                            flavors:content.flavors[flavor],
+                            flavors: content.flavors[flavor],
                             data: false,
                             view: false,
                             meta: content.meta
                         };
-                        if(doc._attachments) {
+                        if (doc._attachments) {
                             toEmit.data = !!doc._attachments["data.json"];
                             toEmit.view = !!doc._attachments["view.json"];
                         }
 
                         var flavor = content.flavors[flavor];
                         var keywords = [];
-                        for(var i=0; i<flavor.length; i++) {
+                        for (var i = 0; i < flavor.length; i++) {
                             var words = flavor[i].split(' ');
-                            for(var j=0; j<words.length; j++) {
+                            for (var j = 0; j < words.length; j++) {
                                 keywords.push(words[j].toLowerCase())
                             }
                         }
 
-                        if(content.keywords && (content.keywords instanceof Array)) {
-                            for(i=0; i<content.keywords.length; i++) {
-                                try{
+                        if (content.keywords && (content.keywords instanceof Array)) {
+                            for (i = 0; i < content.keywords.length; i++) {
+                                try {
                                     var kw = content.keywords[i].toString();
                                     keywords.push(kw);
-                                } catch(e) {
+                                } catch (e) {
 
                                 }
                             }
                         }
 
-                        if(content.keywords && (typeof content.keywords === 'string')) {
+                        if (content.keywords && (typeof content.keywords === 'string')) {
                             var kws = content.keywords.replace(/[\s;, ]+/g, ' ').split(' ');
-                            for(i=0; i<kws.length; i++) {
+                            for (i = 0; i < kws.length; i++) {
                                 keywords.push(kws[i]);
                             }
                         }
 
                         keywords = uniq(keywords);
 
-                        for(i=0; i<keywords.length; i++) {
-                            for(j=i+1; j<keywords.length; j++) {
-                                emit([keywords[i],keywords[j]], toEmit);
+                        for (i = 0; i < keywords.length; i++) {
+                            for (j = i + 1; j < keywords.length; j++) {
+                                emit([keywords[i], keywords[j]], toEmit);
                                 emit([keywords[j], keywords[i]], toEmit);
                             }
                         }
@@ -72,8 +79,8 @@ module.exports = {
                 }
             },
             searchOne: {
-                map: function(doc) {
-                    if(doc.$type !== 'entry') return;
+                map: function (doc) {
+                    if (doc.$type !== 'entry') return;
                     function uniq(a) {
                         var temp = {};
                         for (var i = 0; i < a.length; i++)
@@ -85,50 +92,50 @@ module.exports = {
                     }
 
                     var content = doc.$content;
-                    for(var flavor in content.flavors) {
+                    for (var flavor in content.flavors) {
                         var toEmit = {
-                            _id:doc._id,
-                            _rev:doc._rev,
+                            _id: doc._id,
+                            _rev: doc._rev,
                             flavor: flavor,
-                            flavors:content.flavors[flavor],
+                            flavors: content.flavors[flavor],
                             data: false,
                             view: false,
                             meta: content.meta
                         };
-                        if(doc._attachments) {
+                        if (doc._attachments) {
                             toEmit.data = !!doc._attachments["data.json"];
                             toEmit.view = !!doc._attachments["view.json"];
                         }
 
                         var flavor = content.flavors[flavor];
                         var keywords = [];
-                        for(var i=0; i<flavor.length; i++) {
+                        for (var i = 0; i < flavor.length; i++) {
                             var words = flavor[i].split(' ');
-                            for(var j=0; j<words.length; j++) {
+                            for (var j = 0; j < words.length; j++) {
                                 keywords.push(words[j].toLowerCase())
                             }
                         }
-                        if(content.keywords && (content.keywords instanceof Array)) {
-                            for(i=0; i<content.keywords.length; i++) {
-                                try{
+                        if (content.keywords && (content.keywords instanceof Array)) {
+                            for (i = 0; i < content.keywords.length; i++) {
+                                try {
                                     var kw = content.keywords[i].toString();
                                     keywords.push(kw);
-                                } catch(e) {
+                                } catch (e) {
 
                                 }
                             }
                         }
 
-                        if(content.keywords && (typeof content.keywords === 'string')) {
+                        if (content.keywords && (typeof content.keywords === 'string')) {
                             var kws = content.keywords.replace(/[\s;, ]+/g, ' ').split(' ');
-                            for(i=0; i<kws.length; i++) {
+                            for (i = 0; i < kws.length; i++) {
                                 keywords.push(kws[i]);
                             }
                         }
 
                         keywords = uniq(keywords);
 
-                        for(i=0; i<keywords.length; i++) {
+                        for (i = 0; i < keywords.length; i++) {
                             emit(keywords[i], toEmit);
                         }
                     }
@@ -168,7 +175,7 @@ module.exports = {
             docs: {
                 map: function (doc) {
                     if (doc.$type !== 'entry') return;
-                    if(doc.$owners.indexOf('anonymousRead') === -1) return;
+                    if (doc.$owners.indexOf('anonymousRead') === -1) return;
 
                     var content = doc.$content;
                     for (var flavor in content.flavors) {
