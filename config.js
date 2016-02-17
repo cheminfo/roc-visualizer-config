@@ -2,7 +2,7 @@
 
 module.exports = {
     customDesign: {
-        version: 20,
+        version: 21,
         views: {
             byVisualizerVersion: {
                 map: function (doc) {
