@@ -33,7 +33,8 @@ module.exports = {
                             flavors: content.flavors[flavor],
                             data: false,
                             view: false,
-                            meta: content.meta
+                            meta: content.meta,
+                            keywords: content.keywords
                         };
                         if (doc._attachments) {
                             toEmit.data = !!doc._attachments["data.json"];
@@ -100,7 +101,8 @@ module.exports = {
                             flavors: content.flavors[flavor],
                             data: false,
                             view: false,
-                            meta: content.meta
+                            meta: content.meta,
+                            keywords: content.keywords
                         };
                         if (doc._attachments) {
                             toEmit.data = !!doc._attachments["data.json"];
@@ -188,7 +190,8 @@ module.exports = {
                             data: false,
                             view: false,
                             meta: content.meta,
-                            title: content.title
+                            title: content.title,
+                            keywords: content.keywords
                         };
                         if (doc._attachments) {
                             toEmit.data = !!doc._attachments["data.json"];
