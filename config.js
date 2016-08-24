@@ -297,6 +297,13 @@ module.exports = {
                     return true;
                 }
                 return false;
+            },
+            copyPublic: function(doc) {
+                if(doc._id.substring(0, 7) === '_design') return true;
+                if(doc.$type === 'entry' && doc.$owners.indexOf('anonymousRead') !== -1) {
+                    return true;
+                }
+                return false;
             }
         }
     }
