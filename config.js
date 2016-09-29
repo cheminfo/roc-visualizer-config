@@ -1,6 +1,9 @@
 'use strict';
 
 module.exports = {
+    rights: {
+        create: ['anyuser'],
+    },
     customDesign: {
         version: 23,
         views: {
