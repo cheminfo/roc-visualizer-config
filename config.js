@@ -8,6 +8,7 @@ module.exports = {
         version: 23,
         views: {
             byVisualizerVersion: {
+                designDoc: 'app',
                 map: function (doc) {
                     if (doc.$type !== 'entry') return;
                     emit(doc.$content.version);
@@ -15,6 +16,7 @@ module.exports = {
                 reduce: '_count'
             },
             search: {
+                designDoc: 'app',
                 map: function (doc) {
                     if (doc.$type !== 'entry') return;
                     function uniq(a) {
@@ -83,6 +85,7 @@ module.exports = {
                 }
             },
             searchOne: {
+                designDoc: 'app',
                 map: function (doc) {
                     if (doc.$type !== 'entry') return;
                     function uniq(a) {
@@ -147,6 +150,7 @@ module.exports = {
                 }
             },
             list: {
+                designDoc: 'app',
                 map: function (doc) {
                     if (doc.$type !== 'entry') return;
 
@@ -178,6 +182,7 @@ module.exports = {
                 }
             },
             docs: {
+                designDoc: 'app',
                 map: function (doc) {
                     if (doc.$type !== 'entry') return;
                     if (doc.$owners.indexOf('anonymousRead') === -1) return;
