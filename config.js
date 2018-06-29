@@ -190,7 +190,9 @@ module.exports = {
               view: false,
               meta: content.meta,
               title: content.title,
-              keywords: content.keywords
+              keywords: content.keywords,
+              name: content.name,
+              icon: content.icon
             };
             if (doc._attachments) {
               toEmit.data = !!doc._attachments['data.json'];
