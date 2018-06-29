@@ -192,7 +192,8 @@ module.exports = {
               title: content.title,
               keywords: content.keywords,
               name: content.name,
-              icon: content.icon
+              icon: content.icon,
+              category: content.category
             };
             if (doc._attachments) {
               toEmit.data = !!doc._attachments['data.json'];
