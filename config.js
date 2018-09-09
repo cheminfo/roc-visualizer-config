@@ -142,7 +142,7 @@ module.exports = {
         }
       },
       list: {
-        designDoc: 'app',
+        designDoc: 'brokenApp',
         map: function(doc) {
           if (doc.$type !== 'entry') return;
 
