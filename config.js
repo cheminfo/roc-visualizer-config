@@ -9,7 +9,7 @@ module.exports = {
     views: {
       byVisualizerVersion: {
         designDoc: 'app',
-        map: function(doc) {
+        map: function (doc) {
           if (doc.$type !== 'entry') return;
           emit(doc.$content.version);
         },
@@ -17,13 +17,17 @@ module.exports = {
       },
       search: {
         designDoc: 'app',
-        map: function(doc) {
+        map: function (doc) {
           if (doc.$type !== 'entry') return;
           function uniq(a) {
             var temp = {};
-            for (var i = 0; i < a.length; i++) temp[a[i]] = true;
+            for (var i = 0; i < a.length; i++) {
+              temp[a[i]] = true;
+            }
             var r = [];
-            for (var k in temp) r.push(k);
+            for (var k in temp) {
+              r.push(k);
+            }
             return r;
           }
 
@@ -44,10 +48,10 @@ module.exports = {
               toEmit.view = !!doc._attachments['view.json'];
             }
 
-            var flavor = content.flavors[flavor];
+            var currentFlavor = content.flavors[flavor];
             var keywords = [];
-            for (var i = 0; i < flavor.length; i++) {
-              var words = flavor[i].split(' ');
+            for (var i = 0; i < currentFlavor.length; i++) {
+              var words = currentFlavor[i].split(' ');
               for (var j = 0; j < words.length; j++) {
                 keywords.push(words[j].toLowerCase());
               }
@@ -55,10 +59,8 @@ module.exports = {
 
             if (content.keywords && content.keywords instanceof Array) {
               for (i = 0; i < content.keywords.length; i++) {
-                try {
-                  var kw = content.keywords[i].toString();
-                  keywords.push(kw);
-                } catch (e) {}
+                var kw = content.keywords[i].toString();
+                keywords.push(kw);
               }
             }
 
@@ -82,13 +84,17 @@ module.exports = {
       },
       searchOne: {
         designDoc: 'app',
-        map: function(doc) {
+        map: function (doc) {
           if (doc.$type !== 'entry') return;
           function uniq(a) {
             var temp = {};
-            for (var i = 0; i < a.length; i++) temp[a[i]] = true;
+            for (var i = 0; i < a.length; i++) {
+              temp[a[i]] = true;
+            }
             var r = [];
-            for (var k in temp) r.push(k);
+            for (var k in temp) {
+              r.push(k);
+            }
             return r;
           }
 
@@ -109,20 +115,18 @@ module.exports = {
               toEmit.view = !!doc._attachments['view.json'];
             }
 
-            var flavor = content.flavors[flavor];
+            var currentFlavor = content.flavors[flavor];
             var keywords = [];
-            for (var i = 0; i < flavor.length; i++) {
-              var words = flavor[i].split(' ');
+            for (var i = 0; i < currentFlavor.length; i++) {
+              var words = currentFlavor[i].split(' ');
               for (var j = 0; j < words.length; j++) {
                 keywords.push(words[j].toLowerCase());
               }
             }
             if (content.keywords && content.keywords instanceof Array) {
               for (i = 0; i < content.keywords.length; i++) {
-                try {
-                  var kw = content.keywords[i].toString();
-                  keywords.push(kw);
-                } catch (e) {}
+                var kw = content.keywords[i].toString();
+                keywords.push(kw);
               }
             }
 
@@ -143,30 +147,31 @@ module.exports = {
       },
       list: {
         designDoc: 'app',
-        map: function(doc) {
+        map: function (doc) {
           if (doc.$type !== 'entry') return;
 
           for (var i in doc.$content.flavors) {
             emit(doc.$owners[0], i);
           }
         },
-        reduce: function(key, values, rereduce) {
+        reduce: function (key, values, rereduce) {
           var intobj = {};
+          var i;
 
           if (rereduce) {
-            for (var i = 0; i < values.length; i++) {
+            for (i = 0; i < values.length; i++) {
               var intres = values[i];
               for (var j = 0; j < intres.length; j++) {
                 intobj[intres[j]] = true;
               }
             }
           } else {
-            for (var i = 0; i < values.length; i++) {
+            for (i = 0; i < values.length; i++) {
               intobj[values[i]] = true;
             }
           }
           var result = [];
-          for (var i in intobj) {
+          for (i in intobj) {
             result.push(i);
           }
           return result;
@@ -174,7 +179,7 @@ module.exports = {
       },
       docs: {
         designDoc: 'app',
-        map: function(doc) {
+        map: function (doc) {
           if (doc.$type !== 'entry') return;
           if (doc.$owners.indexOf('anonymousRead') === -1) return;
 
@@ -190,10 +195,7 @@ module.exports = {
               view: false,
               meta: content.meta,
               title: content.title,
-              keywords: content.keywords,
-              name: content.name,
-              icon: content.icon,
-              category: content.category
+              keywords: content.keywords
             };
             if (doc._attachments) {
               toEmit.data = !!doc._attachments['data.json'];
@@ -205,7 +207,7 @@ module.exports = {
       }
     },
     lists: {
-      sort: function(head, req) {
+      sort: function () {
         function sorter(row1, row2) {
           var flavors1 = row1.value.flavors;
           var flavors2 = row2.value.flavors;
@@ -244,11 +246,15 @@ module.exports = {
           if (!valueB) {
             return 1;
           }
+
+          valueA = +valueA;
+          valueB = +valueB;
+
           var aIsNumber = !isNaN(valueA);
           var bIsNumber = !isNaN(valueB);
           if (aIsNumber) {
             if (bIsNumber) {
-              if (valueA * 1 == valueB * 1) {
+              if (valueA === valueB) {
                 return mySort(a, b, ++index);
               }
               return valueA * 1 - valueB * 1;
@@ -288,7 +294,7 @@ module.exports = {
       }
     },
     filters: {
-      copyAdminToCheminfo: function(doc) {
+      copyAdminToCheminfo: function (doc) {
         if (doc._id.substring(0, 7) === '_design') return true;
         if (
           doc.$type === 'entry' &&
@@ -299,7 +305,7 @@ module.exports = {
         }
         return false;
       },
-      copyPublic: function(doc) {
+      copyPublic: function (doc) {
         if (doc._id.substring(0, 7) === '_design') return true;
         if (
           doc.$type === 'entry' &&
